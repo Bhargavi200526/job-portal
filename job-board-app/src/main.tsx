@@ -3,11 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom'; 
 import App from './App';
-import Navbar from './components/Navbar';
+
 import './index.css';
 import { AppProvider } from './context/AppContext';
 import { ClerkProvider } from '@clerk/clerk-react'
-import { useUser, UserButton, SignInButton, SignUpButton } from '@clerk/clerk-react';
+
 
 
 // Import  Publishable Key

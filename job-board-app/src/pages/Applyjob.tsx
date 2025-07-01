@@ -19,7 +19,7 @@ const ApplyJob: React.FC = () => {
   const [isAlreadyApplied, setIsAlreadyApplied] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const { getToken, isLoaded, sessionId } = useAuth();
+  const { getToken } = useAuth();
   const { user: userData } = useUser();
   const userId = userData?.id;
 

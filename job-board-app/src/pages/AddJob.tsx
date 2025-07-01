@@ -24,7 +24,7 @@ const AddJob: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(
+       await axios.post(
         '/api/company/job',
         {
           title,

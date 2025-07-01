@@ -3,7 +3,7 @@ import { assets } from '../assets/assets.ts';
 import { useAppContext } from '../context/AppContext';
 
 const Hero: React.FC = () => {
-    const { search, setSearch, location, setLocation, onSearch } = useAppContext();
+    const { search, setSearch, setLocation, onSearch } = useAppContext();
   return (
 
     <div className="px-4 sm:px-6 lg:px-8 mt-10">
