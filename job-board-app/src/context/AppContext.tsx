@@ -21,7 +21,7 @@ interface Job {
   salary: number;
   date: number;
   description: string;
-  companyId: {
+  company: {
     _id: string;
     name: string;
     email: string;

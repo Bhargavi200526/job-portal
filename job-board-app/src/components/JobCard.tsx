@@ -33,7 +33,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
       {/* Company Info */}
       <div className="flex items-center gap-3">
         <img
-          src={job.company?.image || assets.company_icon}
+          src={job.company?.image ? job.company.image : assets.company_icon}
           alt="Company"
           className="h-10 w-10 object-contain"
         />

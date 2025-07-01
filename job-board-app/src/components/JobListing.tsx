@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { assets, JobCategories, JobLocations } from '../assets/assets.ts';
 import { useAppContext } from '../context/AppContext';
@@ -23,17 +22,17 @@ const JobListing: React.FC = () => {
   const isSearched = search !== '' || location !== '' || selectedCategories.length > 0 || selectedLocations.length > 0;
 
   const filteredJobs = useMemo(() => {
-  return jobs.filter((job) => {
-    const titleMatch = search ? job.title.toLowerCase().includes(search.toLowerCase()) : false;
-    const locationMatchInput = location ? job.location.toLowerCase().includes(location.toLowerCase()) : false;
-    const inputMatch = search || location ? (titleMatch || locationMatchInput) : true;
+    return jobs.filter((job) => {
+      const titleMatch = search ? job.title.toLowerCase().includes(search.toLowerCase()) : false;
+      const locationMatchInput = location ? job.location.toLowerCase().includes(location.toLowerCase()) : false;
+      const inputMatch = search || location ? (titleMatch || locationMatchInput) : true;
 
-    const categoryMatch = selectedCategories.length > 0 ? selectedCategories.includes(job.category) : true;
-    const sidebarLocationMatch = selectedLocations.length > 0 ? selectedLocations.includes(job.location) : true;
+      const categoryMatch = selectedCategories.length > 0 ? selectedCategories.includes(job.category) : true;
+      const sidebarLocationMatch = selectedLocations.length > 0 ? selectedLocations.includes(job.location) : true;
 
-    return inputMatch && categoryMatch && sidebarLocationMatch;
-  });
-}, [search, location, selectedCategories, selectedLocations, jobs]);
+      return inputMatch && categoryMatch && sidebarLocationMatch;
+    });
+  }, [search, location, selectedCategories, selectedLocations, jobs]);
 
   const totalPages = Math.ceil(filteredJobs.length / JOBS_PER_PAGE);
   const startIndex = (currentPage - 1) * JOBS_PER_PAGE;
@@ -151,10 +150,10 @@ const JobListing: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentJobs.length > 0 ? (
               currentJobs.map((job, index) => (
-                <JobCard key={index} job={{
-        ...job,
-        company: job.companyId // use companyId if company is missing
-      }} />
+                <JobCard
+                  key={index}
+                  job={job}
+                />
               ))
             ) : (
               <p className="text-gray-500 col-span-full">No jobs found matching your filters.</p>
