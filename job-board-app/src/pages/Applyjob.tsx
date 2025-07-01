@@ -123,7 +123,7 @@ const ApplyJob: React.FC = () => {
         .filter(
           (j) =>
             j._id !== jobData._id &&
-            j.companyId?._id === jobData.companyId?._id &&
+            j.company?._id === jobData.companyId?._id &&
             !appliedJobIds.has(j._id)
         )
         .slice(0, 4)
@@ -227,7 +227,7 @@ const ApplyJob: React.FC = () => {
             <div className="flex flex-col gap-4">
               {moreJobs.length > 0 ? (
                 moreJobs.map((job, index) => (
-                  <JobCard key={index} job={{ ...job, company: job.companyId }} />
+                  <JobCard key={index} job={{ ...job, company: job.company }} />
                 ))
               ) : (
                 <p className="text-sm text-gray-500">No more jobs available.</p>
