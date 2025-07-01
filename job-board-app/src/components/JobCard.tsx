@@ -1,5 +1,5 @@
 import React from 'react';
-import { assets } from '../assets/assets';
+import { assets } from '../assets/assets.ts';
 import { useNavigate } from 'react-router-dom';
 
 interface JobCardProps {

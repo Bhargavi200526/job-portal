@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { assets } from '../assets/assets';
+import { assets } from '../assets/assets.ts';
 import { toast } from 'react-toastify';
 
 const Loader: React.FC = () => (

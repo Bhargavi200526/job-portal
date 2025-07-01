@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { assets, JobCategories, JobLocations } from '../assets/assets';
+import { assets, JobCategories, JobLocations } from '../assets/assets.ts';
 import { useAppContext } from '../context/AppContext';
 import JobCard from './JobCard';
 
@@ -151,7 +151,10 @@ const JobListing: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentJobs.length > 0 ? (
               currentJobs.map((job, index) => (
-                <JobCard key={index} job={job} />
+                <JobCard key={index} job={{
+        ...job,
+        company: job.companyId // use companyId if company is missing
+      }} />
               ))
             ) : (
               <p className="text-gray-500 col-span-full">No jobs found matching your filters.</p>

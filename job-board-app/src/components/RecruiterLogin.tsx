@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { assets } from '../assets/assets';
+import { assets } from '../assets/assets.ts';
 import axios from 'axios';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';

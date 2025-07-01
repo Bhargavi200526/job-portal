@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import moment from "moment";
-import { assets } from "../assets/assets";
+import { assets } from "../assets/assets.ts";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
 import { useAuth, useUser } from "@clerk/clerk-react";

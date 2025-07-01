@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import Footer from '../components/Footer';
 import moment from 'moment';
-import { assets } from '../assets/assets';
+import { assets } from '../assets/assets.ts';
 import JobCard from '../components/JobCard';
 import { useAppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
@@ -64,17 +63,16 @@ const ApplyJob: React.FC = () => {
   }, [id]);
 
   // Check if already applied for this job
-// Check if already applied for this job
-useEffect(() => {
-  if (userApplications && id) {
-    const applied = userApplications.some(
-      (app) =>
-        (typeof app.jobId === "object" && app.jobId !== null && app.jobId._id === id) ||
-        (typeof app.jobId === "string" && app.jobId === id)
-    );
-    setIsAlreadyApplied(applied);
-  }
-}, [userApplications, id]);
+  useEffect(() => {
+    if (userApplications && id) {
+      const applied = userApplications.some(
+        (app) =>
+          (typeof app.jobId === "object" && app.jobId !== null && app.jobId._id === id) ||
+          (typeof app.jobId === "string" && app.jobId === id)
+      );
+      setIsAlreadyApplied(applied);
+    }
+  }, [userApplications, id]);
 
   const handleApply = async () => {
     if (!user) {
@@ -186,7 +184,7 @@ useEffect(() => {
                 className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
                 disabled={loading}
               >
-                {loading ? <Loader small /> : "Apply Now"}
+                {loading ? <Loader /> : "Apply Now"}
               </button>
             )}
             <p className="text-xs text-gray-500 mt-1">
@@ -216,7 +214,7 @@ useEffect(() => {
                   className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
                   disabled={loading}
                 >
-                  {loading ? <Loader small /> : "Apply Now"}
+                  {loading ? <Loader /> : "Apply Now"}
                 </button>
               )}
             </div>
@@ -229,7 +227,7 @@ useEffect(() => {
             <div className="flex flex-col gap-4">
               {moreJobs.length > 0 ? (
                 moreJobs.map((job, index) => (
-                  <JobCard key={index} job={job} />
+                  <JobCard key={index} job={{ ...job, company: job.companyId }} />
                 ))
               ) : (
                 <p className="text-sm text-gray-500">No more jobs available.</p>

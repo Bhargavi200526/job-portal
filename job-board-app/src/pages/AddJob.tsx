@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { JobCategories, JobLocations } from '../assets/assets';
+import { JobCategories, JobLocations } from '../assets/assets.ts';
 import { useAppContext } from '../context/AppContext';
 
 const AddJob: React.FC = () => {

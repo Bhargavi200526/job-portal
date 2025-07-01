@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { assets } from '../assets/assets';
+import { assets } from '../assets/assets.ts';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
