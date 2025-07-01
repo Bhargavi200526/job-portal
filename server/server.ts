@@ -9,6 +9,10 @@ import { connectCloudinary } from './config/cloudinary';
 import jobRoutes from './routes/JobRoutes';
 import { clerkMiddleware } from '@clerk/express';
 import userRoutes from './routes/userRoutes';
+
+
+
+
 // Load environment variables
 dotenv.config();
 
@@ -28,7 +32,14 @@ connectCloudinary();
 
 // Create Express app
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  "https://job-portal-client-jade-one.vercel.app"
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 app.use(clerkMiddleware())
 
