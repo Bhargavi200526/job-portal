@@ -12,11 +12,11 @@ interface JobCardProps {
     salary: number;
     date: number;
     description: string;
-    companyId: {
+    company: {
       _id: string;
       name: string;
       email: string;
-      image: string;
+      image?: string;
     };
   };
 }
@@ -33,13 +33,13 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
       {/* Company Info */}
       <div className="flex items-center gap-3">
         <img
-          src={job.companyId.image || assets.company_icon}
+          src={job.company?.image || assets.company_icon}
           alt="Company"
           className="h-10 w-10 object-contain"
         />
         <div>
           <h4 className="text-lg font-semibold text-gray-800">{job.title}</h4>
-          <p className="text-sm text-gray-500">{job.companyId.name}</p>
+          <p className="text-sm text-gray-500">{job.company?.name}</p>
         </div>
       </div>
 
@@ -54,12 +54,9 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
       </div>
 
       {/* Description Preview */}
-      <p
-        className="text-gray-700 text-sm"
-        dangerouslySetInnerHTML={{
-          __html: job.description.slice(0, 150) + '...',
-        }}
-      ></p>
+      <p className="text-gray-700 text-sm">
+        {job.description.slice(0, 150)}...
+      </p>
 
       {/* Action Buttons */}
       <div className="flex gap-3 mt-auto">

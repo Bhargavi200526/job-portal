@@ -1,6 +1,6 @@
 // db.ts
 import mongoose from 'mongoose';
-import * as Sentry from '@sentry/node'; // ensure Sentry is initialized before Mongoose
+import * as Sentry from '@sentry/node'; 
 
 const connectDB = async () => {
   try {

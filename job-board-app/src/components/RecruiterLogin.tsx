@@ -1,38 +1,78 @@
-import React, { useState,useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { assets } from '../assets/assets';
+import axios from 'axios';
+import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RecruiterLogin: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [logo, setLogo] = useState<File | null>(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [isLogin, setIsLogin] = useState(true); // true = login, false = sign-up
+  const [isLogin, setIsLogin] = useState(true);
   const [stepTwo, setStepTwo] = useState(false);
 
+  const { setCompanyToken, setCompanyData } = useAppContext();
+  const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-
-  const handleFirstStepSubmit = (e: React.FormEvent) => {
+  const handleFirstStepSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email || !password || (!isLogin && !companyName)) {
-      alert('Please fill in all required fields.');
+      toast.error('Please fill in all required fields.');
       return;
     }
+
     if (isLogin) {
-      alert(`Logged in with email: ${email}`);
+      try {
+        const res = await axios.post(`${backendUrl}/api/company/login`, {
+          email,
+          password,
+        });
+
+        setCompanyToken(res.data.token);
+        setCompanyData(res.data.company);
+        toast.success('Login successful!');
+        navigate('/dashboard');
+      } catch (err: any) {
+        toast.error(err?.response?.data?.message || 'Invalid credentials!');
+      }
     } else {
-      setStepTwo(true); // proceed to logo upload step
+      setStepTwo(true);
     }
   };
 
-  const handleFinalSubmit = () => {
+  const handleFinalSubmit = async () => {
     if (!logo) {
-      alert('Please upload your company logo.');
+      toast.error('Please upload your company logo.');
       return;
     }
-    alert('Account created successfully!');
-    // Reset after signup if needed
+
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('name', companyName);
+      formData.append('image', logo);
+
+      const res = await axios.post(`${backendUrl}/api/company/register`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setCompanyToken(res.data.token);
+      setCompanyData(res.data.company);
+      localStorage.setItem('companyToken', res.data.token);
+
+      toast.success('Account created successfully!');
+      navigate('/dashboard');
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Signup failed!');
+    }
   };
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -42,6 +82,8 @@ const RecruiterLogin: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-8 rounded shadow-lg">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       {!stepTwo ? (
         <>
           <h2 className="text-2xl font-bold text-center mb-2">
@@ -120,21 +162,13 @@ const RecruiterLogin: React.FC = () => {
         </>
       ) : (
         <>
-          <h2 className="text-2xl font-bold text-center mb-2">
-            Welcome back to login
-          </h2>
-          <p className="text-center text-gray-500 mb-6">
-            Upload your company logo
-          </p>
+          <h2 className="text-2xl font-bold text-center mb-2">Almost done!</h2>
+          <p className="text-center text-gray-500 mb-6">Upload your company logo</p>
 
           <div className="flex flex-col items-center gap-4">
             <label htmlFor="logoUpload" className="cursor-pointer">
               <img
-                src={
-                  logo
-                    ? URL.createObjectURL(logo)
-                    : assets.upload_area
-                }
+                src={logo ? URL.createObjectURL(logo) : assets.upload_area}
                 alt="Upload Logo"
                 className="h-32 w-32 rounded-full object-cover border border-gray-300"
               />

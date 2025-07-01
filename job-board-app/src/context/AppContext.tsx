@@ -1,10 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { jobsData } from '../assets/assets'; // import your jobs data
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useUser, useAuth } from "@clerk/clerk-react";
 
 interface User {
   name: string;
   email: string;
   role: 'employer' | 'seeker';
+  resume?: string; 
+  image?: string;
+  _id?: string;
 }
 
 interface Job {
@@ -24,9 +29,41 @@ interface Job {
   };
 }
 
+interface Application {
+  _id: string;
+  jobId: {
+    _id: string;
+    title: string;
+    location: string;
+    category: string;
+    level: string;
+    salary: number;
+    description: string;
+  };
+  companyId: {
+    _id: string;
+    name: string;
+    email: string;
+    image: string;
+  };
+  status: string;
+  appliedAt: string;
+}
+
+interface Company {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+}
+
 interface AppContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  companyToken: string | null;
+  setCompanyToken: (token: string | null) => void;
+  companyData: Company | null;
+  setCompanyData: (data: Company | null) => void;
   search: string;
   setSearch: (val: string) => void;
   location: string;
@@ -34,34 +71,167 @@ interface AppContextType {
   jobs: Job[];
   fetchJobs: () => Promise<void>;
   onSearch: () => void;
+
+  // new:
+  userApplications: Application[];
+  fetchUserApplications: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // Clerk hooks for user info and session token
+  const clerkUser = useUser().user;
+  const { getToken } = useAuth();
+
+  // App state
+  const [user, setUser] = useState<User | null>(null);   
   const [search, setSearch] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [companyToken, setCompanyToken] = useState<string | null>(
+    localStorage.getItem('companyToken') || null
+  );
+  const [companyData, setCompanyData] = useState<Company | null>(null);
 
+  // New: user applications state
+  const [userApplications, setUserApplications] = useState<Application[]>([]);
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  // Fetch jobs from backend
   const fetchJobs = async () => {
-    // simulate API call
-    setJobs(jobsData);
+    try {
+      const res = await axios.get(`${backendUrl}/api/jobs`);
+      if (res.data.jobs && Array.isArray(res.data.jobs)) {
+        setJobs(res.data.jobs);
+      } else {
+        setJobs([]);
+        toast.error('No jobs found');
+      }
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+      toast.error('Failed to fetch jobs');
+      setJobs([]);
+    }
   };
+
+  // Fetch company data
+  const fetchCompanyData = async () => {
+    if (!companyToken) return;
+    try {
+      const res = await axios.get(`${backendUrl}/api/company/profile`, {
+        headers: {
+          Authorization: `Bearer ${companyToken}`,
+        },
+      });
+      setCompanyData(res.data.company);
+    } catch (err: any) {
+      console.error('Failed to fetch company data:', err);
+      toast.error('Session expired. Please login again.');
+      setCompanyToken(null);
+      setCompanyData(null);
+      localStorage.removeItem('companyToken');
+    }
+  };
+
+  // Sync Clerk user to backend MongoDB (ensure user exists in DB)
+  useEffect(() => {
+    async function syncUserToBackend() {
+      if (!clerkUser) {
+        setUser(null);
+        return;
+      }
+      const token = await getToken();
+      try {
+        await axios.post(
+          `${backendUrl}/api/user/sync`,
+          {
+            id: clerkUser.id,
+            email: clerkUser.emailAddresses[0]?.emailAddress || "",
+            name: clerkUser.fullName || "",
+            image: clerkUser.imageUrl || "",
+            role: 'seeker'
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        // Now fetch user data from backend for context
+        const res = await axios.post(
+          `${backendUrl}/api/user/user`,
+          {
+            userId: clerkUser.id
+          }
+        );
+        setUser(res.data.user);
+      } catch (err) {
+        setUser(null);
+        console.error("Failed to sync/fetch user to backend:", err);
+      }
+    }
+    syncUserToBackend();
+    // eslint-disable-next-line
+  }, [clerkUser, getToken, backendUrl]);
+
+  // Maintain login on reload for company
+  useEffect(() => {
+    if (companyToken) {
+      fetchCompanyData();
+    }
+    // eslint-disable-next-line
+  }, [companyToken]);
+
+  // New: Fetch user's job applications
+  const fetchUserApplications = async () => {
+    try {
+      const token = await getToken();
+      // GET /api/user/applications with Bearer token
+      const res = await axios.get(`${backendUrl}/api/user/applications`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.data.success && Array.isArray(res.data.applications)) {
+        setUserApplications(res.data.applications);
+      } else {
+        setUserApplications([]);
+      }
+    } catch (err) {
+      setUserApplications([]);
+      toast.error("Failed to fetch applications");
+      console.error("Error fetching applications:", err);
+    }
+  };
+
+  // Keep token in localStorage
+  useEffect(() => {
+    if (companyToken) {
+      localStorage.setItem('companyToken', companyToken);
+    } else {
+      localStorage.removeItem('companyToken');
+    }
+  }, [companyToken]);
+
+  // Fetch jobs on mount (always, regardless of user)
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   const onSearch = () => {
-    // logic for search filtering (you can add filtering later)
+    // You can implement actual filtering later
+    console.log("Search clicked with:", search, location);
   };
-
-  useEffect(() => {
-    fetchJobs(); // load jobs on mount
-  }, []);
 
   return (
     <AppContext.Provider
       value={{
         user,
         setUser,
+        companyToken,
+        setCompanyToken,
+        companyData,
+        setCompanyData,
         search,
         setSearch,
         location,
@@ -69,6 +239,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         jobs,
         fetchJobs,
         onSearch,
+        userApplications,
+        fetchUserApplications,
       }}
     >
       {children}
