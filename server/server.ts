@@ -35,7 +35,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://job-portal-client-jade-one.vercel.app",
-  "https://job-portal-client-jvcoi7c4w-bhargavis-projects-6383a334.vercel.app"
+  "https://job-portal-client-jvcoi7c4w-bhargavis-projects-6383a334.vercel.app",
+  "https://job-portal-client-k11gtoezd-bhargavis-projects-6383a334.vercel.app" 
 ];
 
 app.use(cors({
