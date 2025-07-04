@@ -116,18 +116,30 @@ const ApplyJob: React.FC = () => {
   };
 
   // NEW: filter out jobs the user has already applied for
-  const appliedJobIds = new Set(userApplications.map(app => app.jobId?._id || app.jobId));
+  // const appliedJobIds = new Set(userApplications.map(app => app.jobId?._id || app.jobId));
 
-  const moreJobs = jobData
-    ? jobs
-        .filter(
-          (j) =>
-            j._id !== jobData._id &&
-            j.company?._id === jobData.companyId?._id &&
-            !appliedJobIds.has(j._id)
-        )
-        .slice(0, 4)
-    : [];
+  // const moreJobs = jobData
+  //   ? jobs
+  //       .filter(
+  //         (j) =>
+  //           j._id !== jobData._id &&
+  //           j.company?._id === jobData.companyId?._id &&
+  //           !appliedJobIds.has(j._id)
+  //       )
+  //       .slice(0, 4)
+  //   : [];
+const appliedJobIds = new Set(userApplications.map(app => app.jobId?._id || app.jobId));
+const moreJobs = jobData
+  ? jobs
+      .filter(
+        (j) =>
+          j._id !== jobData._id &&
+          j.company &&
+          j.company._id?.toString() === jobData.company?._id?.toString() &&
+          !appliedJobIds.has(j._id)
+      )
+      .slice(0, 3)
+  : [];
 
   if (!jobData) {
     return (
@@ -222,7 +234,7 @@ const ApplyJob: React.FC = () => {
 
           <div className="w-full lg:w-1/3">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              More jobs from {jobData.companyId?.name}
+              More jobs from {jobData.companyId?._id}
             </h2>
             <div className="flex flex-col gap-4">
               {moreJobs.length > 0 ? (

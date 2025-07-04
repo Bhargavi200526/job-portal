@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import Company from '../models/Company';
 import { cloudinary } from '../config/cloudinary';
-import { generateToken }  from '../utils/generateToken';
+import { generateToken }  from '../utils/generatetoken';
 import Job from '../models/Job';
 import { Readable } from 'stream';
 import JobApplication from '../models/JobApplication';

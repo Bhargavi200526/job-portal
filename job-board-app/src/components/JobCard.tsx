@@ -54,9 +54,14 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
       </div>
 
       {/* Description Preview */}
-      <p className="text-gray-700 text-sm">
-        {job.description.slice(0, 150)}...
-      </p>
+      <div
+        className="text-gray-700 text-sm line-clamp-2"
+        dangerouslySetInnerHTML={{
+          __html: job.description.length > 150
+            ? job.description.slice(0, 160) + '...'
+            : job.description
+        }}
+      />
 
       {/* Action Buttons */}
       <div className="flex gap-3 mt-auto">
