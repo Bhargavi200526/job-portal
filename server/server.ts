@@ -33,15 +33,12 @@ connectDB();
 connectCloudinary();
 
 
-// Create Express app
-const app = express();
-const allowedOrigins = [
-  "http://localhost:5173",                        // ✅ Dev frontend
-  "https://job-portal-3hzr.onrender.com/api/jobs"    // ✅ Production frontend (replace later)
-];
+// CORS middleware
 
+const app = express();
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: function (origin, callback) {
+    const allowedOrigins = ["http://localhost:5173", "https://job-portal-3hzr.onrender.com"];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -51,9 +48,13 @@ app.use(cors({
   credentials: true
 }));
 
-
+// Express middleware
 app.use(express.json());
-app.use(clerkMiddleware())
+app.use(clerkMiddleware());
+
+// Routes...
+
+
 
 // Routes
 app.get('/', (req, res) => {
