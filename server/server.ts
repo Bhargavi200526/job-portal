@@ -9,7 +9,7 @@ import webhookHandler from './controllers/Webhooks';
 import companyRoutes from './routes/companyRoutes';
 import connectDB from './config/db';
 import { connectCloudinary } from './config/cloudinary';
-import jobRoutes from './routes/JobRoutes';
+// import jobRoutes from './routes/JobRoutes';
 import { clerkMiddleware } from '@clerk/express';
 import userRoutes from './routes/userRoutes';
 
@@ -37,7 +37,8 @@ connectCloudinary();
 const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://job-portal-3hzr.onrender.com"
+  "https://job-portal-3hzr.onrender.com",
+  "https://job-portal-3hzr.onrender.app"
 ];
 
 app.use(cors({
