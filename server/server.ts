@@ -20,13 +20,13 @@ import userRoutes from './routes/userRoutes';
 dotenv.config();
 
 // Initialize Sentry (no handlers)
-Sentry.init({
-  dsn: process.env.SENTRY_DSN || 'https://your-dsn-url',
+//Sentry.init({
+  //dsn: process.env.SENTRY_DSN || 'https://your-dsn-url',
   
-  tracesSampleRate: 1.0,
-  profilesSampleRate: 1.0,
-  sendDefaultPii: true,
-});
+  //tracesSampleRate: 1.0,
+  //profilesSampleRate: 1.0,
+  //sendDefaultPii: true,
+//});
 
 // Connect to MongoDB
 connectDB();
