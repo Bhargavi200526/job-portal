@@ -27,7 +27,7 @@ export const syncUser = async (req: ClerkRequest, res: Response) => {
 
     res.status(200).json({ success: true, user });
   } catch (err: any) {
-    console.error("Sync user error:", err); // log exact error
+    console.error("Sync user error:", err); 
     res.status(500).json({ success: false, message: err.message });
   }
 };

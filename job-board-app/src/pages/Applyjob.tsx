@@ -115,19 +115,7 @@ const ApplyJob: React.FC = () => {
     }
   };
 
-  // NEW: filter out jobs the user has already applied for
-  // const appliedJobIds = new Set(userApplications.map(app => app.jobId?._id || app.jobId));
 
-  // const moreJobs = jobData
-  //   ? jobs
-  //       .filter(
-  //         (j) =>
-  //           j._id !== jobData._id &&
-  //           j.company?._id === jobData.companyId?._id &&
-  //           !appliedJobIds.has(j._id)
-  //       )
-  //       .slice(0, 4)
-  //   : [];
 const appliedJobIds = new Set(userApplications.map(app => app.jobId?._id || app.jobId));
 const moreJobs = jobData
   ? jobs

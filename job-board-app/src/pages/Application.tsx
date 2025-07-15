@@ -21,7 +21,7 @@ const Applications: React.FC = () => {
     }
   };
 
-  // Resume upload (unchanged)
+  // Resume upload 
   const uploadResume = async () => {
     if (!resume) return;
     if (!isLoaded || !sessionId) {

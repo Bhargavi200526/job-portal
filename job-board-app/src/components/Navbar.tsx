@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { assets } from '../assets/assets.ts';
-import RecruiterLogin from './RecruiterLogin'; // ✅ Adjust if it's in a different folder
+import RecruiterLogin from './RecruiterLogin'; 
 
 import {
   useUser,
@@ -33,7 +33,7 @@ const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              {/* ✅ Trigger Custom Modal */}
+              {/* Trigger Custom Modal */}
               <button
                 className="px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-100 transition"
                 onClick={() => setShowRecruiterLogin(true)}
@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* ✅ Recruiter Modal */}
+      
       {showRecruiterLogin && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">

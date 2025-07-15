@@ -1,6 +1,9 @@
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import * as Sentry from '@sentry/node';
 import webhookHandler from './controllers/Webhooks';
 import companyRoutes from './routes/companyRoutes';

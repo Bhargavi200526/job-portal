@@ -31,7 +31,7 @@ const App: React.FC = () => {
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <Routes>
-  {/* ✅ Default route shows Home page */}
+  {/*  Default route shows Home page */}
         <Route index element={<Home />} />
         
         <Route path="/" element={<Home />} />
@@ -41,7 +41,7 @@ const App: React.FC = () => {
         
         {companyToken ? (
           <Route path="/dashboard" element={<Dashboard />}>
-            {/* ✅ Default inside dashboard redirects to manage-jobs */}
+            {/*  Default inside dashboard redirects to manage-jobs */}
             <Route index element={<Navigate to="manage-jobs" replace />} />
             <Route path="view-applications" element={<ViewApplications />} />
             <Route path="manage-jobs" element={<ManageJobs />} />
