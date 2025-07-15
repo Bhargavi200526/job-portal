@@ -66,7 +66,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/webhooks', express.json({ type: '*/*' }), webhookHandler);
-app.use('/api/company', companyRoutes);
+// app.use('/api/company', companyRoutes);
+app.get('/api/jobs', (req, res) => {
+  // ... your logic to fetch jobs
+  res.json({ message: 'List of jobs' });
+});
 app.use('/api/jobs', jobRoutes);
 app.use('/api/user', userRoutes);
 
