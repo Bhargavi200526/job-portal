@@ -37,7 +37,7 @@ connectCloudinary();
 const app = express();
 const allowedOrigins = [
   "http://localhost:5173",                        // ✅ Dev frontend
-  "https://job-board-app-your-name.vercel.app"    // ✅ Production frontend (replace later)
+  "https://job-portal-3hzr.onrender.com"    // ✅ Production frontend (replace later)
 ];
 
 app.use(cors({
