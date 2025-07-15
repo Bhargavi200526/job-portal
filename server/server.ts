@@ -1,4 +1,3 @@
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,32 +8,28 @@ import webhookHandler from './controllers/Webhooks';
 import companyRoutes from './routes/companyRoutes';
 import connectDB from './config/db';
 import { connectCloudinary } from './config/cloudinary';
-// import jobRoutes from './routes/JobRoutes';
 import { clerkMiddleware } from '@clerk/express';
 import userRoutes from './routes/userRoutes';
+// import jobRoutes from './routes/JobRoutes'; // Uncomment later when ready
 
+// Sentry setup (optional)
+/*
+Sentry.init({
+  dsn: process.env.SENTRY_DSN || 'https://your-dsn-url',
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+  sendDefaultPii: true,
+});
+*/
 
-
-
-// Load environment variables
-dotenv.config();
-
-// Initialize Sentry (no handlers)
-//Sentry.init({
-  //dsn: process.env.SENTRY_DSN || 'https://your-dsn-url',
-  
-  //tracesSampleRate: 1.0,
-  //profilesSampleRate: 1.0,
-  //sendDefaultPii: true,
-//});
-
-// Connect to MongoDB
+// Connect DBs
 connectDB();
 connectCloudinary();
 
-
-// CORS middleware
+// Initialize Express app
 const app = express();
+
+// ✅ Allow both localhost (for dev) and deployed domains
 const allowedOrigins = [
   "http://localhost:5173",
   "https://job-portal-3hzr.onrender.com",
@@ -52,33 +47,29 @@ app.use(cors({
   credentials: true
 }));
 
-// THEN middleware
 app.use(express.json());
 app.use(clerkMiddleware());
 
-
-// Routes...
-
-
-
-// Routes
+// ✅ Routes
 app.get('/', (req, res) => {
   res.send('API is working!');
 });
 
 app.post('/webhooks', express.json({ type: '*/*' }), webhookHandler);
+
 app.use('/api/company', companyRoutes);
-app.get('/api/jobs', (req, res) => {
-  res.send('jobs is working!');
-});
 app.use('/api/user', userRoutes);
 
+// ✅ Dummy job route for testing
+app.get('/api/jobs', (req, res) => {
+  res.json({ message: "jobs is working!" });
+});
 
+// Later, use this once your route is ready:
+// app.use('/api/jobs', jobRoutes);
 
-
-// Start server
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
