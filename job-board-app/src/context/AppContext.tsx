@@ -102,7 +102,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Fetch jobs from backend
   const fetchJobs = async () => {
     try {
-      const res = await axios.get(`${backendUrl}/api/jobs`);
+      const res = await axios.get("https://job-portal-3hzr.onrender.com/api/jobs", {
+  withCredentials: true
+});
       if (res.data.jobs && Array.isArray(res.data.jobs)) {
         setJobs(res.data.jobs);
       } else {
