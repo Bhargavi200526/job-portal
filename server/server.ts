@@ -36,14 +36,21 @@ connectCloudinary();
 // Create Express app
 const app = express();
 const allowedOrigins = [
-  "https://job-portal-server-lc8u.onrender.com",
-  
+  "http://localhost:5173",                        // ✅ Dev frontend
+  "https://job-board-app-your-name.vercel.app"    // ✅ Production frontend (replace later)
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
+
 
 app.use(express.json());
 app.use(clerkMiddleware())
