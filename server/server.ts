@@ -8,11 +8,10 @@ import webhookHandler from './controllers/Webhooks';
 import companyRoutes from './routes/companyRoutes';
 import connectDB from './config/db';
 import { connectCloudinary } from './config/cloudinary';
-// ❌ Remove jobRoutes import
-// import jobRoutes from './routes/JobRoutes';
+import { CorsOptions } from 'cors';
 import { clerkMiddleware } from '@clerk/express';
 import userRoutes from './routes/userRoutes';
-
+import jobRoutes from './routes/JobRoutes';
 // Connect to MongoDB and Cloudinary
 connectDB();
 connectCloudinary();
@@ -21,21 +20,24 @@ connectCloudinary();
 const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://job-portal-3hzr.onrender.com",
-  "https://job-portal-3hzr.onrender.app"
+
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
+const corsOptions: CorsOptions = {
+  origin: function (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error("Not allowed by CORS: " + origin));
     }
   },
-  credentials: true
-}));
+  credentials: true,
+};
 
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(clerkMiddleware());
 
@@ -44,14 +46,13 @@ app.get('/', (req, res) => {
   res.send('API is working!');
 });
 
-// ✅ This is what you asked for
-app.get('/api/jobs', (req, res) => {
-  res.json({ message: "jobs is working!" });
-});
+
+
 
 // Keep other routes if needed
 app.post('/webhooks', express.json({ type: '*/*' }), webhookHandler);
 app.use('/api/company', companyRoutes);
+app.use('/api/jobs', jobRoutes);
 app.use('/api/user', userRoutes);
 
 // Start the server

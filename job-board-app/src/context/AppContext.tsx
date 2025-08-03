@@ -102,14 +102,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Fetch jobs from backend
   const fetchJobs = async () => {
     try {
-      const res = await axios.get("https://job-portal-3hzr.onrender.com/api/jobs", {
+      const res = await axios.get(`${backendUrl}/api/jobs`, {
   withCredentials: true
 });
       if (res.data.jobs && Array.isArray(res.data.jobs)) {
         setJobs(res.data.jobs);
       } else {
+
         setJobs([]);
         toast.error('No jobs found');
+
       }
     } catch (err) {
       console.error('Error fetching jobs:', err);
@@ -187,6 +189,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // New: Fetch user's job applications
   const fetchUserApplications = async () => {
     try {
+
       const token = await getToken();
       // GET /api/user/applications with Bearer token
       const res = await axios.get(`${backendUrl}/api/user/applications`, {
